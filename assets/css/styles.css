@@ -1,0 +1,20 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 20 mai 2025, 15:34:42
+    Author     : thomas
+*/
+.full_div{
+    width:100%;
+}
+:root {
+  --bs-body-color: #fff;
+  --bs-body-bg: #212529; 
+}
+.form-control:focus,
+.form-control {
+    background-color: #212529;
+    color: #fff;
+}
