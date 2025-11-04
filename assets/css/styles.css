@@ -1,8 +1,7 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
-*/
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
+
 /* 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
     Created on : 20 mai 2025, 15:34:42
     Author     : thomas
 */
@@ -18,3 +17,197 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     background-color: #212529;
     color: #fff;
 }
+
+.img-fixed {
+  width: 250px;
+  height: 350px;
+  object-fit: cover; /* remplit et rogne si besoin */
+  object-position: center; /* centre le recadrage */
+  border-radius: 8px; /* optionnel, coins arrondis */
+  display: inline-block;
+}
+
+.card-title {
+  color: #fff !important;             /* texte blanc */
+  font-family: 'Poppins', sans-serif; /* police plus élégante */
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Optionnel : effet au survol */
+.tv-home .card-title a {
+  color: #fff !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.tv-home .card-title a:hover {
+  color: #ff5252 !important; /* rouge doux au survol */
+}
+
+
+
+/* 2) Titre blanc + plus jolie police */
+
+
+.tv-home h2.text-center > a {
+  color: #777272 !important;           /* titre blanc */
+  font-weight: 400;
+  text-decoration: none;            /* sans soulignement */
+}
+
+h2.text-center > a:hover,
+h2.text-center > a:focus,
+h2.text-center > a:visited {
+  color: #777272  !important;           /* garde le blanc dans tous les états */
+}
+
+h2.text-center {
+    margin-top: 40px;
+  margin-bottom: 150px; /* espace sous le titre */
+}
+
+/* Si tu veux un peu plus d’air : */
+@media (min-width: 868px) {
+  h2.text-center {
+    margin-bottom: 125px;
+  }
+}
+
+.tangerine-regular {
+  font-family: "Tangerine", cursive;
+
+}
+
+.tangerine-bold {
+  font-family: "Tangerine", cursive;
+font-size:clamp(4.712rem, 2.712rem + ((1vw - 0.2rem) * 6.147), 12.2rem);
+margin-bottom: 150px;
+margin-top: 150px;
+}
+
+/* fond sable du bas de page */
+.bg-sable {
+  background: #c6b895; /* ajuste si besoin pour matcher ton beige */
+}
+
+/* optionnel : coins doux en bas */
+.home-bottom {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* titres du bas */
+.home-bottom h2 {
+  font-family: "Poppins", sans-serif;
+}
+
+/* si tu veux forcer tout le texte centre/droite en blanc */
+.home-bottom .col-md-5,
+.home-bottom .col-md-3 {
+  /* color: #fff; */
+}
+
+/* --- NAVBAR STYLE --- */
+.bg-noir {
+  background-color: #111;
+}
+
+/* Logo */
+.logo-mini {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+/* Liens du menu WordPress dans la navbar */
+.navbar-nav .nav-item a,
+.navbar-nav .menu-item a {
+  color: #fff !important;             /* texte blanc */
+  text-decoration: none !important;   /* pas de soulignement */
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+}
+
+/* État survol, actif, focus, visité */
+.navbar-nav .nav-item a:hover,
+.navbar-nav .nav-item a:focus,
+.navbar-nav .nav-item a:active,
+.navbar-nav .menu-item a:hover,
+.navbar-nav .menu-item a:focus,
+.navbar-nav .menu-item a:active,
+.navbar-nav .menu-item a:visited {
+  color: #fff !important;
+  text-decoration: none !important;
+  opacity: 0.85;
+}
+
+/* Supprime aussi le style du lien actif (page courante) */
+.navbar-nav .current-menu-item > a,
+.navbar-nav .current_page_item > a {
+  color: #fff !important;
+  text-decoration: none !important;
+  opacity: 1;
+}
+
+
+/* Bouton burger */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255,255,255,0.85%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .navbar-nav .nav-link {
+    font-size: 1.1rem;
+  }
+  .logo-mini {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.demarche-lead {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  font-size: 1.15rem;
+  line-height: 1.85;
+}
+
+.img-fixed {
+  width: 100%;
+  height: 300px;             /* hauteur uniforme */
+  object-fit: cover;         /* recadre sans déformer */
+  border-radius: 8px;
+}
+
+h2.text-center a {
+  color: #777272  !important;    /* texte blanc */
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+h2.text-center a:hover {
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+
+
+.carousel {
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
