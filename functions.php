@@ -54,28 +54,41 @@ add_shortcode('oeuvres_lumineuses', function ($atts = []) {
 // [oeuvres_lumineuses_full limit="30" orderby="date" order="DESC"]
 add_shortcode('galerie', function ($atts) {
     $atts = shortcode_atts([
-        'category' => null, // slug de la catégorie
-        'limit' => 30, // nombre d’articles à afficher
-        'orderby' => 'date',
-        'order' => 'DESC',
+        'category' => '', // optionnel
+        'limit' => 30, // nb d’articles
             ], $atts, 'galerie');
 
     $cat_slug = sanitize_title($atts['category']);
     $limit = absint($atts['limit']);
-    $orderby = sanitize_text_field($atts['orderby']);
-    $order = sanitize_text_field($atts['order']);
 
     $args = [
         'post_type' => 'post',
         'posts_per_page' => $limit,
-            // 'orderby'             => $orderby,
-            //'order'               => $order,
-            // 'ignore_sticky_posts' => true,
+        'ignore_sticky_posts' => true,
+        // Tri ACF priority (numérique) décroissant, puis date
+       // 'meta_key' => 'priority',
+        'order' => 'DESC', // De la meilleure note à la moins bonnte
+        'orderby' => 'meta_value', // Rangé selon un champ personnalisé
+        'meta_key' => 'priority', // C'est ici qu'on indique quel est ce champ
+        /*
+        'meta_query' => [
+            'relation' => 'OR',
+            'priority_clause' => ['key' => 'priority', 'type' => 'NUMERIC'],
+            'numero_clause' => ['key' => 'numero', 'type' => 'NUMERIC'],
+        ],
+        'orderby' => [
+            'priority_clause' => 'DESC', // priorité la plus haute d’abord
+            'numero_clause' => 'ASC', // puis numéro croissant
+            'date' => 'DESC', // en cas d’égalité
+        ],
+         * 
+         */
     ];
-    if (isset($cat_slug)) {
-        $args ['category_name'] = $cat_slug;
+
+    if (!empty($cat_slug)) {
+        $args['category_name'] = $cat_slug;
     }
-    // Requête WordPress
+
     $q = new WP_Query($args);
 
     ob_start();
@@ -84,30 +97,27 @@ add_shortcode('galerie', function ($atts) {
         ?>
         <div class="container py-5">
             <div class="row g-4 justify-content-center">
-                <?php
-                while ($q->have_posts()) {
-                    $q->the_post();
-                    ?>
-
+        <?php while ($q->have_posts()) {
+            $q->the_post();
+            ?>
                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 text-center" id="post-<?php the_ID(); ?>">
-            <?php if (has_post_thumbnail()) { ?>
+                    <?php if (has_post_thumbnail()) { ?>
                             <a href="<?php the_permalink(); ?>">
                                 <img
                                     class="img-fixed img-fluid rounded shadow-sm"
+                                    title="<?= get_post_meta(the_ID(), "priority") ?>"
                                     src="<?php echo esc_url(get_the_post_thumbnail_url(null, 'large')); ?>"
                                     alt="<?php the_title_attribute(); ?>"
                                     loading="lazy"
                                     />
                             </a>
             <?php } ?>
-
                         <h2 class="text-center mt-3">
                             <a href="<?php the_permalink(); ?>" class="text-white text-decoration-none">
             <?php the_title(); ?>
                             </a>
                         </h2>
                     </div>
-
         <?php } ?>
             </div>
         </div>
@@ -139,7 +149,10 @@ add_shortcode('galerie', function ($atts) {
  */
 
 // [slider_random limit="3" interval="5000" height="600" category="" post_type="post" controls="false" ids="" images="" image_size="large" link="post"]
-add_shortcode('slider_random', function ($atts) {
+add_shortcode('slider_random', 'shotcodeSlider');
+add_shortcode('slider', 'shotcodeSlider');
+
+    function shotcodeSlider ($atts) {
     $a = shortcode_atts([
         'limit' => 3, // nb d’items si aléatoire
         'interval' => 5000, // ms entre slides
@@ -277,28 +290,28 @@ add_shortcode('slider_random', function ($atts) {
              data-bs-interval="<?php echo esc_attr($interval); ?>">
 
             <div class="carousel-inner">
-                        <?php foreach ($items as $i => $it): ?>
+    <?php foreach ($items as $i => $it): ?>
                     <div class="carousel-item <?php echo ($i === 0) ? 'active' : ''; ?>">
                         <div class="position-relative w-100" style="height: <?php echo esc_attr($height); ?>px; overflow: hidden;">
-                            <?php
-                            $img_src = !empty($it['img']) ? $it['img'] : 'https://via.placeholder.com/1920x' . (int) $height . '?text=Sans+image';
-                            $alt = !empty($it['alt']) ? $it['alt'] : '';
-                            $img_tag = '<img src="' . esc_url($img_src) . '" class="d-block w-100" style="object-fit:cover; height:' . (int) $height . 'px;" alt="' . esc_attr($alt) . '" loading="lazy">';
+        <?php
+        $img_src = !empty($it['img']) ? $it['img'] : 'https://via.placeholder.com/1920x' . (int) $height . '?text=Sans+image';
+        $alt = !empty($it['alt']) ? $it['alt'] : '';
+        $img_tag = '<img src="' . esc_url($img_src) . '" class="d-block w-100" style="object-fit:cover; height:' . (int) $height . 'px;" alt="' . esc_attr($alt) . '" loading="lazy">';
 
-                            if (!empty($it['url'])) {
-                                echo '<a href="' . esc_url($it['url']) . '">' . $img_tag . '</a>';
-                            } else {
-                                echo $img_tag;
-                            }
-                            ?>
+        if (!empty($it['url'])) {
+            echo '<a href="' . esc_url($it['url']) . '">' . $img_tag . '</a>';
+        } else {
+            echo $img_tag;
+        }
+        ?>
                         </div>
-        <?php /* pas de caption, pas de contrôles, pas d'indicateurs */ ?>
+                            <?php /* pas de caption, pas de contrôles, pas d'indicateurs */ ?>
                     </div>
-    <?php endforeach; ?>
+                    <?php endforeach; ?>
             </div>
         </div>
     </div>
     <?php
     return ob_get_clean();
-});
+}
 

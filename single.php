@@ -5,7 +5,7 @@
  */
 ?>
 <?php get_header(); ?>
-
+<?php include get_template_directory() . '/menu.php'; ?>
 <main id="main-content" class="container py-5">
     <?php
     if (have_posts()) {
