@@ -54,9 +54,9 @@ add_shortcode('oeuvres_lumineuses', function ($atts = []) {
 // [oeuvres_lumineuses_full limit="30" orderby="date" order="DESC"]
 add_shortcode('galerie', function ($atts) {
     $atts = shortcode_atts([
-        'category' => '', // optionnel
-        'limit' => 30, // nb d’articles
-            ], $atts, 'galerie');
+        'category' => '',
+        'limit' => 30,
+    ], $atts, 'galerie');
 
     $cat_slug = sanitize_title($atts['category']);
     $limit = absint($atts['limit']);
@@ -65,24 +65,9 @@ add_shortcode('galerie', function ($atts) {
         'post_type' => 'post',
         'posts_per_page' => $limit,
         'ignore_sticky_posts' => true,
-        // Tri ACF priority (numérique) décroissant, puis date
-       // 'meta_key' => 'priority',
-        'order' => 'DESC', // De la meilleure note à la moins bonnte
-        'orderby' => 'meta_value', // Rangé selon un champ personnalisé
-        'meta_key' => 'priority', // C'est ici qu'on indique quel est ce champ
-        /*
-        'meta_query' => [
-            'relation' => 'OR',
-            'priority_clause' => ['key' => 'priority', 'type' => 'NUMERIC'],
-            'numero_clause' => ['key' => 'numero', 'type' => 'NUMERIC'],
-        ],
-        'orderby' => [
-            'priority_clause' => 'DESC', // priorité la plus haute d’abord
-            'numero_clause' => 'ASC', // puis numéro croissant
-            'date' => 'DESC', // en cas d’égalité
-        ],
-         * 
-         */
+        'order' => 'DESC',
+        'orderby' => 'meta_value',
+        'meta_key' => 'priority',
     ];
 
     if (!empty($cat_slug)) {
@@ -96,35 +81,46 @@ add_shortcode('galerie', function ($atts) {
     if ($q->have_posts()) {
         ?>
         <div class="container py-5">
-            <div class="row g-4 justify-content-center">
+            <div class="row g-4 justify-content-center tv-galerie">
         <?php while ($q->have_posts()) {
             $q->the_post();
+
+            // Récupération ACF largeur / hauteur
+            $w = get_field('art_width_cm');
+            $h = get_field('art_height_cm');
+
             ?>
-                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 text-center" id="post-<?php the_ID(); ?>">
-                    <?php if (has_post_thumbnail()) { ?>
-                            <a href="<?php the_permalink(); ?>">
-                                <img
-                                    class="img-fixed img-fluid rounded shadow-sm"
-                                    title="<?= get_post_meta(the_ID(), "priority") ?>"
-                                    src="<?php echo esc_url(get_the_post_thumbnail_url(null, 'large')); ?>"
-                                    alt="<?php the_title_attribute(); ?>"
-                                    loading="lazy"
-                                    />
-                            </a>
-            <?php } ?>
-                        <h2 class="text-center mt-3">
-                            <a href="<?php the_permalink(); ?>" class="text-white text-decoration-none">
-            <?php the_title(); ?>
-                            </a>
-                        </h2>
-                    </div>
+            <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 text-center" id="post-<?php the_ID(); ?>">
+                <?php if (has_post_thumbnail()) { ?>
+                    <a href="<?php the_permalink(); ?>">
+                        <img
+                            class="img-fixed img-fluid rounded shadow-sm"
+                            title="<?= get_post_meta(get_the_ID(), "priority", true); ?>"
+                            src="<?php echo esc_url(get_the_post_thumbnail_url(null, 'large')); ?>"
+                            alt="<?php the_title_attribute(); ?>"
+                            loading="lazy"
+                        />
+                    </a>
+                <?php } ?>
+
+                <h4 class="text-center mt-3">
+                    <a href="<?php the_permalink(); ?>" class="text-white text-decoration-none">
+                        <?php the_title(); ?>
+                    </a>
+                </h4>
+
+                <?php if ($w || $h) : ?>
+                    <p class="text-muted small mb-0">
+                        <?= esc_html($w); ?> × <?= esc_html($h); ?> cm
+                    </p>
+                <?php endif; ?>
+            </div>
         <?php } ?>
             </div>
         </div>
     <?php } else { ?>
         <p class="text-muted">Aucun article trouvé.</p>
-        <?php
-    }
+    <?php }
 
     wp_reset_postdata();
     return ob_get_clean();
@@ -315,3 +311,87 @@ add_shortcode('slider', 'shotcodeSlider');
     return ob_get_clean();
 }
 
+
+// Chargement CSS/JS du visualiseur
+add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_style('view-room-css', get_stylesheet_directory_uri() . '/view-room.css', [], '1.0');
+    wp_enqueue_script('view-room-js', get_stylesheet_directory_uri() . '/view-room.js', ['jquery'], '1.0', true);
+});
+
+// Shortcode [view_in_room]
+add_shortcode('view_in_room', function ($atts) {
+    if (!is_singular()) return '';
+
+    $post_id = get_the_ID();
+    // Récup dimensions réelles (cm)
+    $w_cm = get_post_meta($post_id, 'art_width_cm', true);
+    $h_cm = get_post_meta($post_id, 'art_height_cm', true);
+
+    // Fallback si champs manquants
+    if (!$w_cm || !$h_cm) {
+        // essaie de lire via ACF (si ACF actif)
+        if (function_exists('get_field')) {
+            $w_cm = $w_cm ?: get_field('art_width_cm', $post_id);
+            $h_cm = $h_cm ?: get_field('art_height_cm', $post_id);
+        }
+    }
+    $w_cm = $w_cm ?: 80; // défaut
+    $h_cm = $h_cm ?: 60; // défaut
+
+    // Image de l’œuvre (format large recommandé)
+    $art_img = get_the_post_thumbnail_url($post_id, 'large');
+    if (!$art_img) return ''; // pas d’image -> pas d’outil
+
+    ob_start(); ?>
+    <div class="view-room">
+      <button class="vr-open">🖼️ Tester dans mon salon</button>
+
+      <div class="vr-modal" aria-hidden="true">
+        <div class="vr-dialog" role="dialog" aria-modal="true">
+          <div class="vr-header">
+            <h3>Voir le tableau chez vous</h3>
+            <button class="vr-close" aria-label="Fermer">×</button>
+          </div>
+
+          <div class="vr-tools">
+            <label class="vr-upload">
+              <input type="file" accept="image/*" class="vr-file">
+              Téléverser la photo de votre mur
+            </label>
+
+            <label>Largeur du mur (cm)
+              <input type="number" class="vr-wall-width" value="300" min="100" max="1000">
+            </label>
+
+            <label>Hauteur du mur (cm)
+              <input type="number" class="vr-wall-height" value="250" min="100" max="1000">
+            </label>
+
+            <label>Rotation (°)
+              <input type="range" class="vr-rotate" min="-10" max="10" step="0.1" value="0">
+            </label>
+
+            <button class="vr-reset">Réinitialiser</button>
+          </div>
+
+          <div class="vr-stage-wrap">
+            <div class="vr-stage"
+                 data-artimg="<?php echo esc_url($art_img); ?>"
+                 data-artw="<?php echo esc_attr($w_cm); ?>"
+                 data-arth="<?php echo esc_attr($h_cm); ?>">
+              <!-- L’image du mur téléversée devient le fond.
+                   Le tableau est une <img> draggable/resize conservant les proportions -->
+              <img class="vr-art" alt="Œuvre">
+            </div>
+          </div>
+
+          <p class="vr-help">
+            Astuce : indiquez la largeur/hauteur approximative du mur pour respecter l’échelle.
+            Vous pouvez déplacer le tableau (glisser), pincer sur mobile ou utiliser la molette pour redimensionner.
+          </p>
+        </div>
+      </div>
+    </div>
+    <?php
+    return ob_get_clean();
+});

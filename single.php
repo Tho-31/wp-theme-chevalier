@@ -38,10 +38,11 @@
                 </div>
 
 
+
                 <div class="content fs-6 lh-sm mx-auto" style="max-width:800px;">
                     <?php the_content(); ?>
                 </div>
-
+<?php echo do_shortcode('[view_in_room]'); ?>
             </article>
 
         <?php

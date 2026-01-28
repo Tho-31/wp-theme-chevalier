@@ -1,0 +1,238 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 14 nov. 2025, 15:53:47
+    Author     : thomas
+*/
+/* Bouton d’ouverture */
+.view-room .vr-open {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1.1rem;
+  border-radius: .5rem;
+  border: 1px solid rgba(255,255,255,.2);
+  background: transparent;
+  color: #f8f9fa;
+  font-size: .95rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
+}
+
+.view-room .vr-open:hover {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.view-room .vr-open:active {
+  transform: translateY(0);
+}
+
+/* Overlay type modal Bootstrap */
+.vr-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  z-index: 1055; /* proche modal BS */
+}
+
+.vr-modal[aria-hidden="false"] {
+  display: block;
+}
+
+/* Boîte principale */
+.vr-dialog {
+  background: #121212;
+  margin: 4vh auto;
+  max-width: 1100px;
+  padding: 1.25rem 1.5rem;
+  border-radius: .8rem;
+  box-shadow: 0 0.75rem 2rem rgba(0,0,0,.7);
+  border: 1px solid rgba(255,255,255,.08);
+  color: #f8f9fa;
+}
+
+/* Header */
+.vr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+
+.vr-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* Bouton close type Bootstrap */
+.vr-close {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #adb5bd;
+  padding: .15rem .4rem;
+  border-radius: 999px;
+  transition: background-color .15s ease, color .15s ease, transform .1s ease;
+}
+
+.vr-close:hover {
+  background: rgba(255,255,255,.08);
+  color: #f8f9fa;
+}
+
+/* Barre d’outils – style row Bootstrap */
+.vr-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1rem;
+  align-items: center;
+  margin: .25rem 0 1rem;
+  font-size: .9rem;
+}
+
+.vr-tools label {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #ced4da;
+}
+
+.vr-tools input[type="number"],
+.vr-tools input[type="range"] {
+  max-width: 130px;
+}
+
+/* Inputs type Bootstrap 5 dark */
+.vr-tools input[type="number"] {
+  padding: .25rem .5rem;
+  border-radius: .3rem;
+  border: 1px solid #495057;
+  background: #212529;
+  color: #f8f9fa;
+  font-size: .85rem;
+}
+
+.vr-tools input[type="number"]:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 .1rem rgba(13,110,253,.25);
+}
+
+.vr-tools input[type="range"] {
+  accent-color: #0d6efd;
+}
+
+/* Bouton upload fichier */
+.vr-upload input[type=file] {
+  display: none;
+}
+
+.vr-upload {
+  padding: .4rem .75rem;
+  border-radius: .5rem;
+  border: 1px dashed rgba(255,255,255,.35);
+  background: rgba(255,255,255,.02);
+  color: #f8f9fa;
+  cursor: pointer;
+  font-size: .85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.vr-upload:hover {
+  background: rgba(13,110,253,.15);
+  border-color: #0d6efd;
+}
+
+/* Bouton reset style btn-outline-light */
+.vr-tools .vr-reset {
+  padding: .4rem .8rem;
+  border-radius: .5rem;
+  border: 1px solid rgba(248,249,250,.55);
+  background: transparent;
+  color: #f8f9fa;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.vr-tools .vr-reset:hover {
+  background: #f8f9fa;
+  color: #000;
+  border-color: #f8f9fa;
+}
+
+/* Zone visuelle */
+.vr-stage-wrap {
+  border-radius: .75rem;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+.vr-stage {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+}
+
+/* L’œuvre */
+.vr-art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform, width, height, rotate;
+  user-select: none;
+  touch-action: none;
+  box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.8);
+  border-radius: .1rem;
+}
+
+/* Texte d’aide */
+.vr-help {
+  color: #adb5bd;
+  font-size: .85rem;
+  margin-top: .6rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vr-dialog {
+    margin: 2vh auto;
+    max-width: 95vw;
+    padding: 1rem;
+  }
+
+  .vr-stage {
+    height: 50vh;
+  }
+
+  .vr-tools {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vr-tools input[type="number"] {
+    max-width: 100px;
+  }
+}
+
+

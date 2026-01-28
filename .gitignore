@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# IDE
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+nbproject/
+
+# Node (si ajouté plus tard)
+node_modules/
+
+# Archives
+*.zip
+*.tar.gz
